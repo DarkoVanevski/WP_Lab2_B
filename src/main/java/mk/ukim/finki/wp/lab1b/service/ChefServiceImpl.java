@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab1b.repository.ChefRepository;
 import mk.ukim.finki.wp.lab1b.repository.DishRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,12 +32,33 @@ public class ChefServiceImpl implements ChefService{
     @Override
     public Chef addDishToChef(Long chefId, String dishId) {
         Chef chef = findById(chefId);
-        Dish dish = dishRepository.findByDishId(dishId).orElseThrow();
+        Dish dish = dishRepository.findById(Long.valueOf(dishId)).orElseThrow();
 
-        if(chef !=null && dish != null){
-            chef.getDishes().add(dish);
-            chefRepository.save(chef);
-        }
+        dish.setChef(chef);
+        dishRepository.save(dish);
         return chef;
+    }
+
+    @Override
+    public Chef create(String firstName, String lastName, String bio, List<Dish> dishes) {
+        Chef chef = new Chef();
+        chef.setFirstName(firstName);
+        chef.setLastName(lastName);
+        chef.setBio(bio);
+        return chefRepository.save(chef);
+    }
+
+    @Override
+    public Chef update(Long id, String firstName, String lastName, String bio, List<Dish> dishes) {
+        Chef chef = findById(id);
+        chef.setFirstName(firstName);
+        chef.setLastName(lastName);
+        chef.setBio(bio);
+        return chefRepository.save(chef);
+    }
+
+    @Override
+    public void delete(Long id) {
+        chefRepository.deleteById(id);
     }
 }

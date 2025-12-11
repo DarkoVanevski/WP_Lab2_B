@@ -9,6 +9,8 @@ public interface DishService {
     Dish findByDishId(String dishId);
     Dish findById(Long id);
     Dish create(String dishId, String name, String cuisine, int preparationTime);
+    Dish create(String dishId, String name, String cuisine, int preparationTime, Long chefId); // Нов метод
     Dish update(Long id, String dishId, String name, String cuisine, int preparationTime);
+    Dish update(Long id, String dishId, String name, String cuisine, int preparationTime, Long chefId); // Нов метод
     void delete(Long id);
 }

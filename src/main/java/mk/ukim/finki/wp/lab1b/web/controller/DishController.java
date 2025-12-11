@@ -28,36 +28,54 @@ public class DishController {
     }
 
     @PostMapping("/add")
-    public String saveDish(@RequestParam String dishId, @RequestParam String name, @RequestParam String cuisine, @RequestParam int preparationTime) {
-        dishService.create(dishId, name, cuisine, preparationTime);
+    public String saveDish(@RequestParam String dishId,
+                           @RequestParam String name,
+                           @RequestParam String cuisine,
+                           @RequestParam int preparationTime,
+                           @RequestParam(required = false) Long chefId) {
+        if (chefId != null) {
+            dishService.create(dishId, name, cuisine, preparationTime, chefId);
+        } else {
+            dishService.create(dishId, name, cuisine, preparationTime);
+        }
         return "redirect:/dishes";
     }
 
     @PostMapping("/edit/{id}")
-    public String editDish(@PathVariable Long id, @RequestParam String dishId, @RequestParam String name, @RequestParam String cuisine, @RequestParam int preparationTime){
-        dishService.update(id, dishId, name, cuisine, preparationTime);
+    public String editDish(@PathVariable Long id,
+                           @RequestParam String dishId,
+                           @RequestParam String name,
+                           @RequestParam String cuisine,
+                           @RequestParam int preparationTime,
+                           @RequestParam(required = false) Long chefId) {
+        if (chefId != null) {
+            dishService.update(id, dishId, name, cuisine, preparationTime, chefId);
+        } else {
+            dishService.update(id, dishId, name, cuisine, preparationTime);
+        }
         return "redirect:/dishes";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteDish(@PathVariable Long id){
+    public String deleteDish(@PathVariable Long id) {
         dishService.delete(id);
         return "redirect:/dishes";
     }
 
     @GetMapping("/dish-form")
     public String getAddDishPage(Model model) {
-        model.addAttribute("dish", new Dish(null, "", "", "", 0));
+        model.addAttribute("dish", new Dish());
+        model.addAttribute("chefs", chefService.listChefs());
         model.addAttribute("isEdit", false);
-        return "dish-form";  // dish-form.html
+        return "dish-form";
     }
 
-    // 7.2 EDIT FORM PAGE (Prefilled form)
     @GetMapping("/dish-form/{id}")
     public String getEditDishForm(@PathVariable Long id, Model model) {
         try {
             Dish dish = dishService.findById(id);
             model.addAttribute("dish", dish);
+            model.addAttribute("chefs", chefService.listChefs());
             model.addAttribute("isEdit", true);
             return "dish-form";
         } catch (Exception e) {
@@ -70,5 +88,4 @@ public class DishController {
         chefService.addDishToChef(chefId, String.valueOf(dishId));
         return "redirect:/chefs/" + chefId;
     }
-
 }
