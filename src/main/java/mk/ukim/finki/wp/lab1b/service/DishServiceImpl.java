@@ -4,9 +4,12 @@ import mk.ukim.finki.wp.lab1b.model.Chef;
 import mk.ukim.finki.wp.lab1b.model.Dish;
 import mk.ukim.finki.wp.lab1b.repository.ChefRepository;
 import mk.ukim.finki.wp.lab1b.repository.DishRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static mk.ukim.finki.wp.lab1b.service.specification.FieldFilterSpecification.*;
 
 @Service
 public class DishServiceImpl implements DishService {
@@ -21,6 +24,18 @@ public class DishServiceImpl implements DishService {
     @Override
     public List<Dish> listDishes() {
         return dishRepository.findAll();
+    }
+    public List<Dish> find(String name, String cuisine, Integer minTime, Integer maxTime, String chefName) {
+        // all filters
+        Specification<Dish> specification = Specification.allOf(
+                filterContainsText(Dish.class, "name", name),
+                filterContainsText(Dish.class, "cuisine", cuisine),
+                filterGreaterThanOrEqual(Dish.class, "preparationTime", minTime),
+                filterLessThanOrEqual(Dish.class, "preparationTime", maxTime),
+                filterContainsText(Dish.class, "chef.firstName", chefName)
+        );
+
+        return dishRepository.findAll(specification);
     }
 
     @Override

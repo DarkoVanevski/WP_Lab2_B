@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import java.util.List;
 import java.util.Optional;
 
-public interface DishRepository extends JpaRepository<Dish,Long> {
+public interface DishRepository extends JpaSpecificationRepository<Dish,Long> {
     List<Dish> findAllByChef_Id(Long chefId);
 }

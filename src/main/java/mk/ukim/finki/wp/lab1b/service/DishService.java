@@ -7,6 +7,8 @@ import java.util.List;
 public interface DishService {
     List<Dish> listDishes();
     Dish findByDishId(String dishId);
+    List<Dish> find(String name, String cuisine, Integer minTime, Integer maxTime, String chefName);
+
     Dish findById(Long id);
     Dish create(String dishId, String name, String cuisine, int preparationTime);
     Dish create(String dishId, String name, String cuisine, int preparationTime, Long chefId); // Нов метод

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/dishes")
 public class DishController {
@@ -19,11 +21,29 @@ public class DishController {
     }
 
     @GetMapping
-    public String getDishesPage(@RequestParam(required = false) String error, Model model) {
-        model.addAttribute("dishes", dishService.listDishes());
+    public String getDishesPage(
+            @RequestParam(required = false) String error,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String cuisine,
+            @RequestParam(required = false) Integer minTime,
+            @RequestParam(required = false) Integer maxTime,
+            @RequestParam(required = false) String chefName,
+            Model model) {
+
+
+        List<Dish> dishes = dishService.find(name, cuisine, minTime, maxTime, chefName);
+
+        model.addAttribute("dishes", dishes);
+        model.addAttribute("searchName", name);
+        model.addAttribute("searchCuisine", cuisine);
+        model.addAttribute("searchMinTime", minTime);
+        model.addAttribute("searchMaxTime", maxTime);
+        model.addAttribute("searchChefName", chefName);
+
         if (error != null && !error.isEmpty()) {
             model.addAttribute("error", error);
         }
+
         return "listDishes";
     }
 
