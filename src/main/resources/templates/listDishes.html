@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title>Dishes List</title>
@@ -122,8 +123,8 @@
         <td th:text="${dish.preparationTime}"></td>
         <td th:text="${dish.chef != null ? dish.chef.firstName + ' ' + dish.chef.lastName : 'No chef assigned'}"></td>
         <td>
-            <a th:href="@{/dishes/dish-form/{id}(id=${dish.id})}" class="btn btn-edit">Edit</a>
-            <form th:action="@{/dishes/delete/{id}(id=${dish.id})}" method="post" style="display:inline;">
+            <a th:href="@{/dishes/dish-form/{id}(id=${dish.id})}" class="btn btn-edit" sec:authorize="hasRole('ADMIN')">Edit</a>
+            <form th:action="@{/dishes/delete/{id}(id=${dish.id})}" method="post" style="display:inline;" sec:authorize="hasRole('ADMIN')">
                 <button type="submit" class="btn btn-delete">Delete</button>
             </form>
         </td>
